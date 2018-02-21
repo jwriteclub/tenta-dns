@@ -23,9 +23,13 @@
 package runtime
 
 import (
+	"bytes"
+	"net/http"
 	"sync"
+	"time"
 
 	"github.com/miekg/dns"
+	"github.com/tenta-browser/tenta-dns/log"
 )
 
 type DNSValMap map[uint16][]*DNSCacheRecord
@@ -117,4 +121,56 @@ func (c *DNSCache) GetRaw(key string, rrType uint16) (DNSValMap, error) {
 	defer temp.l.RUnlock()
 	c.l.RUnlock()
 	return temp.v, nil
+}
+
+func StartDNSCache(cfg Config, rt *Runtime) *DNSCache {
+	f := &DNSCache{}
+	if t, ok := cfg.SlackFeedback["url"]; !ok {
+		f.nopmode = true
+	} else {
+		f.msg = make(chan []byte)
+		f.stop = make(chan bool)
+		f.whURL = t
+		if nodeId, ok := cfg.SlackFeedback["node"]; ok {
+			f.nodeId = nodeId
+		} else {
+			f.nodeId = "placeholder"
+		}
+		f.l = log.GetLogger("feedback")
+		wg := &sync.WaitGroup{}
+		f.wg = wg
+		go f.startFeedbackService()
+		f.wg.Add(1)
+		f.l.Infof("Started Feedback service")
+	}
+	return f
+}
+
+func (f *DNSCache) startDNSCacheService() {
+	defer f.wg.Done()
+	for {
+		select {
+		case <-f.stop:
+			f.l.Infof("Stop signal received. Exiting.")
+			return
+		case b := <-f.msg:
+			resp, err := http.Post(f.whURL, "application/x-www-form-urlencoded", bytes.NewReader(b))
+			defer resp.Body.Close()
+			if err != nil {
+				f.l.Infof("Unable to send to Slack. Cause [%s]", err.Error())
+			} else if resp.StatusCode != 200 {
+				f.l.Infof("Unable to send to Slack. HTTP status [%d]", resp.StatusCode)
+			}
+			break
+		case <-time.After(100 * time.Millisecond):
+			break
+		}
+	}
+}
+
+func (f *DNSCache) Stop() {
+	if !f.nopmode {
+		defer f.wg.Wait()
+		f.stop <- true
+	}
 }
