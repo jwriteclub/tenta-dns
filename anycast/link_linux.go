@@ -29,7 +29,7 @@ import (
 	"github.com/tenta-browser/tenta-dns/common"
 	"net"
 
-	"github.com/milosgajdos83/tenus"
+	"github.com/milosgajdos/tenus"
 	"github.com/sirupsen/logrus"
 )
 
