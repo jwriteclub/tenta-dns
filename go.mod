@@ -10,20 +10,18 @@ require (
 	github.com/dgryski/go-farm v0.0.0-20171119141306-ac7624ea8da3 // indirect
 	github.com/eapache/channels v1.1.0 // indirect
 	github.com/eapache/queue v1.0.2 // indirect
-	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/hashicorp/hcl v0.0.0-20170509225359-392dba7d905e // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/influxdata/influxdb v1.8.0 // indirect
 	github.com/intel-go/cpuid v0.0.0-20181003105527-1a4a6f06a1c6 // indirect
-	github.com/jessevdk/go-flags v1.3.0 // indirect
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
-	github.com/k-sone/critbitgo v1.3.1-0.20191024122315-48c9e1530131 // indirect
 	github.com/leonelquinteros/gorand v1.0.2
 	github.com/magiconair/properties v1.7.3 // indirect
 	github.com/mattn/go-colorable v0.1.6
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
 	github.com/miekg/dns v1.1.29
+	github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28
+	github.com/milosgajdos83/tenus v0.0.0-00010101000000-000000000000 // indirect
 	github.com/mitchellh/mapstructure v0.0.0-20170523030023-d0303fe80992 // indirect
 	github.com/muesli/cache2go v0.0.0-20200423001931-a100c5aac93f
 	github.com/oschwald/maxminddb-golang v1.7.0
@@ -45,3 +43,5 @@ require (
 	google.golang.org/grpc v1.29.1 // indirect
 	gopkg.in/tomb.v2 v2.0.0-20161208151619-d5d1b5820637 // indirect
 )
+
+replace github.com/milosgajdos83/tenus => github.com/milosgajdos/tenus v0.0.0-20200407173122-3f68252810e6
